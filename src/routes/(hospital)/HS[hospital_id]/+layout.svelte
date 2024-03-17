@@ -3,6 +3,7 @@
   import { Loader2 } from "lucide-svelte";
   import { Sidebar } from "../_components/sidebar";
   import type { LayoutData } from "./$types";
+  import CheckInModal from "../_components/check-in-modal";
 
   export let data: LayoutData;
 
@@ -23,3 +24,4 @@
 {:catch}
   <div>An error occured while fetching hospital. try again</div>
 {/await}
+<CheckInModal/>
