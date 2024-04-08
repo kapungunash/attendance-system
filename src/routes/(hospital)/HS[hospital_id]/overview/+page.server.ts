@@ -1,10 +1,15 @@
 import { HospitalEmployee } from "$lib/models/hospital/hospital-employee";
-import { count, eq } from "drizzle-orm";
+import { count, eq, or } from "drizzle-orm";
 import type { PageServerLoad } from "./$types"
 import colors from "tailwindcss/colors"
 
 export const load: PageServerLoad = async (e) => {
-  const totalEmployees = (await e.locals.db.select({ value: count(HospitalEmployee.userId) }).from(HospitalEmployee).where(eq(HospitalEmployee.hospitalId, "HS" + e.params.hospital_id)))[0].value;
+  const totalEmployees = (await e.locals.db.select({ value: count(HospitalEmployee.userId) }).from(HospitalEmployee).where(
+    or(
+      eq(HospitalEmployee.hospitalId, "HS" + e.params.hospital_id),
+      eq(HospitalEmployee.hospitalId, e.params.hospital_id)
+    )
+  ))[0].value;
 
   return {
     attendenceOverview: {

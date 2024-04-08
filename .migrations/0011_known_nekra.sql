@@ -1,0 +1,1 @@
+ALTER TABLE employee_attendence ADD `hospital_id` text;

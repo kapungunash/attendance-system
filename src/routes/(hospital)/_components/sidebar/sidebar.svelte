@@ -13,6 +13,11 @@
     Users,
   } from "lucide-svelte";
   import { twMerge } from "tailwind-merge";
+  import CheckInModal from "../check-in-modal/check-in-modal.svelte";
+  import hs from "$lib/stores/hospital";
+
+  let isCheckInModalOpen: boolean = false;
+  let isCheckOutModalOpen: boolean = false;
 
   const navItems = [
     {
@@ -22,7 +27,6 @@
     },
     { title: "Employees", link: "employees", icon: Users },
     { title: "Departments", link: "departments", icon: Building },
-    { title: "Settings", link: "settings", icon: Settings },
     { title: "Check in employees", link: "check-in", icon: LogIn },
     { title: "Check out employees", link: "check-out", icon: LogOut },
   ];
@@ -32,7 +36,7 @@
 
 <aside class="border h-full min-w-64 flex flex-col gap-3 bg-gray-300 p-3">
   <div class="flex items-center justify-between">
-    <span class="text-md font-bold"> MATERDEI HOSPITAL </span>
+    <span class="text-md font-bold"> {$hs?.name} </span>
 
     <Button pill={true} color="none" class=" w-7 h-7 p-0">
       <SidebarClose class="h-4 w-4" />
@@ -40,30 +44,39 @@
   </div>
   <nav class="w-full gap-0.5 flex flex-col">
     {#each navItems as n}
-      <a
-        href={n.link}
-        class={twMerge(
-          "w-full h-9 flex p-2 rounded-md border border-transparent text-sm items-center gap-2 bg-gray-300 font-medium transition-colors",
-          "hover:bg-gray-400",
-          page === n.link && "!bg-gray-800 text-white !border-gray-800"
-        )}
-      >
-        <svelte:component this={n.icon} class="h-4 w-4 opacity-80" />
-        {n.title}
-      </a>
+      {#if n.link === "check-in" || n.link === "check-out"}
+        <button
+          on:click={() => {
+            if (n.link === "check-in") {
+              isCheckInModalOpen = true;
+              return;
+            }
+            isCheckOutModalOpen = false;
+          }}
+          class={twMerge(
+            "w-full h-9 flex p-2 rounded-md border border-transparent text-sm items-center gap-2 bg-gray-300 font-medium transition-colors",
+            "hover:bg-gray-400",
+            page === n.link && "!bg-gray-800 text-white !border-gray-800"
+          )}
+        >
+          <svelte:component this={n.icon} class="h-4 w-4 opacity-80" />
+          {n.title}
+        </button>
+      {:else}
+        <a
+          href={n.link}
+          class={twMerge(
+            "w-full h-9 flex p-2 rounded-md border border-transparent text-sm items-center gap-2 bg-gray-300 font-medium transition-colors",
+            "hover:bg-gray-400",
+            page === n.link && "!bg-gray-800 text-white !border-gray-800"
+          )}
+        >
+          <svelte:component this={n.icon} class="h-4 w-4 opacity-80" />
+          {n.title}
+        </a>
+      {/if}
     {/each}
   </nav>
-  <div class="flex-1 items-end flex flex-row">
-    <div class="flex gap-2 p-2 cursor-pointer items-center w-full rounded-md">
-      <div>
-        <Avatar size="sm" />
-      </div>
-      <div class="flex w-full text-sm flex-col">
-        <span class="font-medium"> Decent J. Femayi </span>
-        <span class="text-xs"> EMP2230152 </span>
-      </div>
-
-      <ChevronRight class="w-6 h-6" />
-    </div>
-  </div>
 </aside>
+
+<CheckInModal bind:open={isCheckInModalOpen} />

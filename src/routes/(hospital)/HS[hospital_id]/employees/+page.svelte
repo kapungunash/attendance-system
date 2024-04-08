@@ -11,8 +11,7 @@
     TableHead,
     TableHeadCell,
   } from "flowbite-svelte";
-  import { Trash2, AlertCircle, Info, QrCode } from "lucide-svelte";
-  import AddDepartmentModal from "../../_components/add-department-modal/add-department-modal.svelte";
+  import { Trash2, AlertCircle, Info, QrCodeIcon } from "lucide-svelte";
   import type { PageData } from "./$types";
   import { enhance } from "$app/forms";
   import type { SubmitFunction } from "@sveltejs/kit";
@@ -20,8 +19,10 @@
 
   export let data: PageData;
   let deleteform: HTMLFormElement;
-  let isNewEmployeeModalOpen: boolean = true;
+  let isNewEmployeeModalOpen: boolean = false;
   let confirmDeletion: boolean = false;
+
+  let showEmployeeQr: boolean = false;
 
   $: toast = {
     type: "success",
@@ -31,6 +32,7 @@
 
   let { employees } = data;
   let toDelete: string = "";
+  let toShowQR: string = "";
 
   const showToast = (type: "success" | "error", message: string) => {
     toast = {
@@ -80,6 +82,7 @@
       <TableHeadCell>ID</TableHeadCell>
       <TableHeadCell>Name</TableHeadCell>
       <TableHeadCell>Email</TableHeadCell>
+      <TableHeadCell>Department</TableHeadCell>
       <TableHeadCell>Status</TableHeadCell>
       <TableHeadCell></TableHeadCell>
     </TableHead>
@@ -89,16 +92,17 @@
           <TableBodyCell>{f.userId}</TableBodyCell>
           <TableBodyCell>{f.user.fullname}</TableBodyCell>
           <TableBodyCell>{f.user.email}</TableBodyCell>
+          <TableBodyCell>{f.department?.name}</TableBodyCell>
           <TableBodyCell>
             <Badge color="yellow">Absent</Badge>
           </TableBodyCell>
 
-          <TableBodyCell>
+          <TableBodyCell class="flex gap-2">
             <form
               bind:this={deleteform}
               use:enhance={deleteDepartment}
               method="POST"
-              action={"employees/delete?dept-id=" + f.userId}
+              action={"employees/delete?empl-id=" + f.userId}
             >
               <Button
                 on:click={() => {
@@ -114,8 +118,17 @@
                 <Trash2 class="w-5 h-5 text-white" />
               </Button>
             </form>
-            <Button outline={false} class="!p-2" type="button" size="lg">
-              <QrCode class="w-5 h-5 text-white" />
+            <Button
+              on:click={() => {
+                toShowQR = f.userId;
+                showEmployeeQr = true;
+              }}
+              outline={false}
+              class="!p-2"
+              type="button"
+              size="lg"
+            >
+              <QrCodeIcon class="w-5 h-5 text-white" />
             </Button>
           </TableBodyCell>
         </TableBodyRow>
@@ -160,4 +173,11 @@
   </Alert>
 {/if}
 
-<AddEmployeeModal bind:open={isNewEmployeeModalOpen} />
+<AddEmployeeModal
+  departments={data.departments.map((d) => ({ name: d.name, value: d.id }))}
+  bind:open={isNewEmployeeModalOpen}
+/>
+
+<Modal bind:open={showEmployeeQr} class="overflow-hidden h-full">
+  <!-- <QRCode class="w-16 h-16" value="https://github.com/" /> -->
+</Modal>

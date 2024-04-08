@@ -1,15 +1,18 @@
 <script lang="ts">
-  import { Modal } from "flowbite-svelte";
+  import { Input, Modal } from "flowbite-svelte";
   import { Button } from "flowbite-svelte";
   import QrScanner from "qr-scanner";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
 
+  export let open: boolean;
   let scanning = false;
   let videoElem: HTMLVideoElement;
   let qrScanner: QrScanner;
 
-  let result = writable<string>();
+  let error: string = "";
+
+  let result = writable<string>("");
 
   onMount(init);
 
@@ -22,7 +25,7 @@
   }
 </script>
 
-<Modal class="overflow-hidden min-w-min w-min h-full">
+<Modal {open} class="overflow-hidden min-w-min w-min h-full">
   <main class="p-6 w-min h-full flex">
     <div class="relative aspect-video overflow-hidden rounded-md w-min h-48">
       <div
@@ -33,12 +36,13 @@
 
     {$result}
     <div class="mt-6 w-full font-semibold">
-      <div>
-        <div>EMPLOYEE ID:</div>
-        <div>DEPARTMENT:</div>
-        <div>NAME:</div>
-        <Button class="mt-6 w-full">Check in</Button>
-      </div>
+      <Input bind:value={$result} />
+      <form>
+        <p class="text-sm h-5 mt-2 text-left text-destructive">
+          {error}
+        </p>
+        <Button disabled={!$result} class="mt-6 w-full">Check in</Button>
+      </form>
     </div>
   </main>
 </Modal>

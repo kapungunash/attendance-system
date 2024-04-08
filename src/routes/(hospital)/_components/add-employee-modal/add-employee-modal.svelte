@@ -1,11 +1,12 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import type { SubmitFunction } from "@sveltejs/kit";
-  import { Input, Label, Modal } from "flowbite-svelte";
+  import { Input, Label, Modal, Select } from "flowbite-svelte";
   import { Button } from "flowbite-svelte";
   import { Loader2 } from "lucide-svelte";
 
   export let open: boolean = false;
+  export let departments: { value: string; name: string }[] = [];
 
   let error: string = "";
 
@@ -47,6 +48,19 @@
       />
     </div>
     <div class="grid gap-1">
+      <Label for="username">Username</Label>
+      <Input
+        id="username"
+        name="username"
+        class="w-full"
+        placeholder="jdoe"
+        type="text"
+        autocomplete="off"
+        autocapitalize="none"
+        required
+      />
+    </div>
+    <div class="grid gap-1">
       <Label for="id">Employee ID</Label>
       <Input
         id="id"
@@ -72,13 +86,23 @@
       />
     </div>
     <div class="grid gap-1 w-full">
-      <Label for="default-password">Default password</Label>
+      <Label for="email">Department</Label>
+      <Select
+        id="department"
+        name="department"
+        items={departments}
+        class="w-full"
+        required
+      />
+    </div>
+    <div class="grid gap-1 w-full">
+      <Label for="password">Default password</Label>
       <Input
-        id="default-password"
-        name="default-password"
+        id="password"
+        name="password"
         placeholder="••••••••"
         class="w-full"
-        type="text"
+        type="password"
         autocomplete="off"
         required
       />

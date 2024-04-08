@@ -57,6 +57,34 @@
       "when": 1712569107121,
       "tag": "0007_legal_vulture",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1712582245693,
+      "tag": "0008_nebulous_bug",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1712582398395,
+      "tag": "0009_glorious_dragon_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1712585183438,
+      "tag": "0010_round_warlock",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1712585359648,
+      "tag": "0011_known_nekra",
+      "breakpoints": true
     }
   ]
 }

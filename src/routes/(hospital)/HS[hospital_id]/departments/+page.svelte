@@ -91,7 +91,7 @@
           <TableBodyCell>{f.name}</TableBodyCell>
           <TableBodyCell>{f.checkInTime}</TableBodyCell>
           <TableBodyCell>{f.checkOutTime}</TableBodyCell>
-          <TableBodyCell>0</TableBodyCell>
+          <TableBodyCell>{f.numberOfEmployees}</TableBodyCell>
 
           <TableBodyCell>
             <form
