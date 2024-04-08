@@ -9,7 +9,7 @@ import generateRandomString from "$lib/helpers/generateRandomString";
 const registerHospitalSchema = z.object({
   id: z.string()
     .length(10, { message: "Hospital ID must have a minimum of 10 characters" })
-    .refine((s) => s.startsWith("H"), { message: "Hospital ID's should begin with 'H'" })
+    .refine((s) => s.startsWith("HS"), { message: "Hospital ID's should begin with 'HS'" })
   ,
   name: z
     .string()

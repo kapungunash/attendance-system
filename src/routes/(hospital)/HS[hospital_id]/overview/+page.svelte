@@ -32,34 +32,15 @@
     </div>
   </div>
   <div
-    class="bg-gray-100 gap-3 grid grid-cols-2 rounded-md border border-gray-300 shadow-sm p-3"
+    class="bg-gray-100 flex rounded-md border border-gray-300 shadow-sm p-3 flex-col"
   >
-    <div class="">
-      <div class="font-medium text-lg mb-4">Weekly attendence summary</div>
+    <div class="font-medium text-lg mb-4">Weekly attendence summary</div>
 
-      <Chart
-        options={{
-          ...WeeklyAttendenceSummaryBarOptions,
-          series: data.weeklyAttendenceSummaryBarSeries,
-        }}
-      />
-    </div>
-    <div>
-      <div class="font-medium text-lg mb-4">Recent Attendees</div>
-      <div class="w-full gap-3 place-items-center gap grid grid-cols-2">
-        {#each Array(4) as e}
-          <div class="flex-center flex-col">
-            <Avatar
-              size="lg"
-              class="mb-3"
-              dot={{ placement: "bottom-right", color: "green" }}
-            />
-            <span class="font-medium"> Decent J. Femayi </span>
-            <span class="font-medium"> Cleaning Dept </span>
-            <span> EMP1243021 </span>
-          </div>
-        {/each}
-      </div>
-    </div>
+    <Chart
+      options={{
+        ...WeeklyAttendenceSummaryBarOptions,
+        series: data.weeklyAttendenceSummaryBarSeries,
+      }}
+    />
   </div>
 </main>

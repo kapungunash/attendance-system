@@ -1,7 +1,6 @@
 <script lang="ts">
   import {
     Alert,
-    Badge,
     Button,
     Modal,
     Table,
@@ -10,17 +9,18 @@
     TableBodyRow,
     TableHead,
     TableHeadCell,
+    TableSearch,
   } from "flowbite-svelte";
-  import { Trash2, AlertCircle, Info, QrCode } from "lucide-svelte";
+  import { Trash2, AlertCircle, Info } from "lucide-svelte";
+  import { writable } from "svelte/store";
   import AddDepartmentModal from "../../_components/add-department-modal/add-department-modal.svelte";
   import type { PageData } from "./$types";
   import { enhance } from "$app/forms";
   import type { SubmitFunction } from "@sveltejs/kit";
-  import AddEmployeeModal from "../../_components/add-employee-modal/add-employee-modal.svelte";
 
   export let data: PageData;
   let deleteform: HTMLFormElement;
-  let isNewEmployeeModalOpen: boolean = true;
+  let isNewDepartmentModalOpen: boolean = false;
   let confirmDeletion: boolean = false;
 
   $: toast = {
@@ -29,7 +29,7 @@
     message: "",
   };
 
-  let { employees } = data;
+  let { departments } = data;
   let toDelete: string = "";
 
   const showToast = (type: "success" | "error", message: string) => {
@@ -56,7 +56,7 @@
         showToast("error", result?.data?.message);
         return;
       }
-      employees = employees.filter(({ userId }) => userId !== toDelete);
+      departments = departments.filter(({ id }) => id !== toDelete);
 
       showToast("success", "Department deleted successfully");
     };
@@ -66,9 +66,9 @@
 <main class="p-4 w-full">
   <header class="mb-6 flex flex-col">
     <div class="flex justify-between items-center w-full">
-      <h1 class="font-semibold text-xl">Employees</h1>
-      <Button on:click={() => (isNewEmployeeModalOpen = true)}
-        >Add employee</Button
+      <h1 class="font-semibold text-xl">Departments</h1>
+      <Button on:click={() => (isNewDepartmentModalOpen = true)}
+        >Add department</Button
       >
     </div>
   </header>
@@ -79,30 +79,30 @@
     <TableHead class="bg-gray-200 border border-b border-gray-300">
       <TableHeadCell>ID</TableHeadCell>
       <TableHeadCell>Name</TableHeadCell>
-      <TableHeadCell>Email</TableHeadCell>
-      <TableHeadCell>Status</TableHeadCell>
+      <TableHeadCell>Check-in time</TableHeadCell>
+      <TableHeadCell>Check-out time</TableHeadCell>
+      <TableHeadCell>Employees</TableHeadCell>
       <TableHeadCell></TableHeadCell>
     </TableHead>
     <TableBody tableBodyClass="divide-y">
-      {#each employees as f}
+      {#each departments as f}
         <TableBodyRow>
-          <TableBodyCell>{f.userId}</TableBodyCell>
-          <TableBodyCell>{f.user.fullname}</TableBodyCell>
-          <TableBodyCell>{f.user.email}</TableBodyCell>
-          <TableBodyCell>
-            <Badge color="yellow">Absent</Badge>
-          </TableBodyCell>
+          <TableBodyCell>{f.id}</TableBodyCell>
+          <TableBodyCell>{f.name}</TableBodyCell>
+          <TableBodyCell>{f.checkInTime}</TableBodyCell>
+          <TableBodyCell>{f.checkOutTime}</TableBodyCell>
+          <TableBodyCell>0</TableBodyCell>
 
           <TableBodyCell>
             <form
               bind:this={deleteform}
               use:enhance={deleteDepartment}
               method="POST"
-              action={"employees/delete?dept-id=" + f.userId}
+              action={"departments/delete?dept-id=" + f.id}
             >
               <Button
                 on:click={() => {
-                  toDelete = f.userId;
+                  toDelete = f.id;
                   confirmDeletion = true;
                 }}
                 outline={false}
@@ -114,9 +114,6 @@
                 <Trash2 class="w-5 h-5 text-white" />
               </Button>
             </form>
-            <Button outline={false} class="!p-2" type="button" size="lg">
-              <QrCode class="w-5 h-5 text-white" />
-            </Button>
           </TableBodyCell>
         </TableBodyRow>
       {/each}
@@ -160,4 +157,4 @@
   </Alert>
 {/if}
 
-<AddEmployeeModal bind:open={isNewEmployeeModalOpen} />
+<AddDepartmentModal bind:open={isNewDepartmentModalOpen} />

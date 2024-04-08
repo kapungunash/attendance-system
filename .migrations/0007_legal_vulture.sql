@@ -1,0 +1,1 @@
+ALTER TABLE department ADD `hospital_id` text NOT NULL;
