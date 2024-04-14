@@ -48,8 +48,15 @@ export const actions = {
     }
     catch (e: any) {
       if (isRedirect(e)) throw e
-      form.errors._errors = ["An unexpected error has occured.  Please try again"];
-      return fail(500, {
+
+      if(e.message.includes("UNIQUE constraint failed: hospital.id"))
+        form.errors._errors = ["Hospital ID already exists"];
+
+      else{
+        form.errors._errors = ["An unexpected error has occured.  Please try again"];
+        console.log(e)
+      }
+      return fail(400, {
         form,
       })
     }

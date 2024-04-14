@@ -14,6 +14,7 @@
   } from "lucide-svelte";
   import { twMerge } from "tailwind-merge";
   import CheckInModal from "../check-in-modal/check-in-modal.svelte";
+  import CheckOutModal from "../check-out-modal/check-out-modal.svelte";
   import hs from "$lib/stores/hospital";
 
   let isCheckInModalOpen: boolean = false;
@@ -27,8 +28,8 @@
     },
     { title: "Employees", link: "employees", icon: Users },
     { title: "Departments", link: "departments", icon: Building },
-    { title: "Check in employees", link: "check-in", icon: LogIn },
-    { title: "Check out employees", link: "check-out", icon: LogOut },
+    { title: "Check in employee", link: "check-in", icon: LogIn },
+    { title: "Early Check out employee", link: "check-out", icon: LogOut },
   ];
 
   $: page = $pageStore.url.pathname.split("/")[2];
@@ -51,7 +52,7 @@
               isCheckInModalOpen = true;
               return;
             }
-            isCheckOutModalOpen = false;
+            return (isCheckOutModalOpen = true);
           }}
           class={twMerge(
             "w-full h-9 flex p-2 rounded-md border border-transparent text-sm items-center gap-2 bg-gray-300 font-medium transition-colors",
@@ -80,3 +81,4 @@
 </aside>
 
 <CheckInModal bind:open={isCheckInModalOpen} />
+<!-- <CheckOutModal bind:open={isCheckOutModalOpen} /> -->

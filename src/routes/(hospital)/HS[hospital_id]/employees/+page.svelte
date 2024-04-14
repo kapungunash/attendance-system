@@ -17,10 +17,25 @@
   import type { SubmitFunction } from "@sveltejs/kit";
   import AddEmployeeModal from "../../_components/add-employee-modal/add-employee-modal.svelte";
 
+  import { onMount } from "svelte";
+  //@ts-ignore
+  import QRCode from "qrcode";
+  import type { any } from "zod";
+
+  $: canv = undefined as any;
+  let qrCode: QRCode;
+
+  onMount(async () => {
+    qrCode = await QRCode.toCanvas(canv, "Sample text");
+  });
+
   export let data: PageData;
   let deleteform: HTMLFormElement;
   let isNewEmployeeModalOpen: boolean = false;
   let confirmDeletion: boolean = false;
+
+  $: qrUrl = "";
+  $: console.log(qrUrl);
 
   let showEmployeeQr: boolean = false;
 
@@ -94,7 +109,9 @@
           <TableBodyCell>{f.user.email}</TableBodyCell>
           <TableBodyCell>{f.department?.name}</TableBodyCell>
           <TableBodyCell>
-            <Badge color="yellow">Absent</Badge>
+            <Badge color="yellow">
+              {f.status}
+            </Badge>
           </TableBodyCell>
 
           <TableBodyCell class="flex gap-2">
@@ -121,7 +138,17 @@
             <Button
               on:click={() => {
                 toShowQR = f.userId;
-                showEmployeeQr = true;
+
+                QRCode.toDataURL(
+                  f.userId,
+                  { errorCorrectionLevel: "H" },
+                  function (err, url) {
+                    if (err) throw err;
+                    toShowQR = f.userId;
+                    qrUrl = url;
+                    showEmployeeQr = true;
+                  }
+                );
               }}
               outline={false}
               class="!p-2"
@@ -143,7 +170,7 @@
       class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
     />
     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-      Are you sure you want to delete this department?
+      Are you sure you want to delete this employee?
     </h3>
     <Button
       on:click={() => {
@@ -178,6 +205,12 @@
   bind:open={isNewEmployeeModalOpen}
 />
 
-<Modal bind:open={showEmployeeQr} class="overflow-hidden h-full">
-  <!-- <QRCode class="w-16 h-16" value="https://github.com/" /> -->
+<Modal
+  bind:open={showEmployeeQr}
+  class="overflow-hidden h-full flex items-center justify-center"
+>
+  <img src={qrUrl} class="h-64 bg-red-200 w-64" />
+  <div class="flex items-center justify-center text-center">
+    {toShowQR}
+  </div>
 </Modal>

@@ -40,6 +40,7 @@
     <form
       use:enhance={({}) => {
         return ({ result }) => {
+          //@ts-ignore
           alert(result.data.message);
           open = false;
         };
@@ -53,7 +54,7 @@
         {error}
       </p>
       <Button type="submit" disabled={!$result} class="mt-6 w-full"
-        >Check in</Button
+        >Check out early</Button
       >
     </form>
   </main>
